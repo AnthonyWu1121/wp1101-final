@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { UPDATE_TIME_MUTATION } from "../../graphql/index";
 import { useQuery, useMutation } from "@apollo/client";
 
-export default ({teamName, preTime}) => {
+export default ({teamName, preTime, isRegisterClosed}) => {
     const [selectedDays, setSelectedDays] = useState([])
     const [selectedDaysInDateForm, setSelectedDaysInDateForm] = useState(preTime)
 
@@ -120,7 +120,7 @@ export default ({teamName, preTime}) => {
         <Row>
             <Col span={6}>
                 <Button 
-                    disabled={selectedDays.length === 0?true:false} 
+                    disabled={isRegisterClosed || (selectedDays.length === 0?true:false)} 
                     onClick={() => {
                         handleOnclick();
                     }}

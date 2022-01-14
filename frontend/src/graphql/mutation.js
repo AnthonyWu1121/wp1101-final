@@ -1,6 +1,7 @@
 // createTeam(name: String!): Team!
 // deleteTeam(name: String!): Boolean!
 // updateTime(name: String!, time: [String!]!): Team!
+// updateAdminData: AdminData!
 
 import { gql } from "@apollo/client";
 
@@ -33,6 +34,15 @@ export const CREATE_MATCH_MUTATION = gql`
         createMatch {
             matchName
             time
+        }
+    }
+`
+
+export const UPDATE_ADMINDATA_MUTATION = gql`
+    mutation updateAdminData {
+        updateAdminData {
+            admin
+            isRegisterClosed
         }
     }
 `

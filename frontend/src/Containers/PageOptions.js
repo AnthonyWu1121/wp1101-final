@@ -8,19 +8,21 @@ import MainPage from './Component/MainPage';
 import AdminMainPage from './Component/AdminMainPage';
 import LoginIdentity from './LoginIdentity';
 
-import { TEAMTIME_QUERY, TIME_SUBSCRIPTION } from "../graphql/index";
+import { TEAMTIME_QUERY, TIME_SUBSCRIPTION, ADMINDATA_QUERY, ADMINDATA_SUBSCRIPTION } from "../graphql/index";
 import { useQuery } from "@apollo/client";
 
 const Options = ({ setLogin, teamName }) => {
-    const { data, loading, subscribeToMore } = useQuery(TEAMTIME_QUERY, {
+    const { data: teamTImeData, loading: teamTimeLoading, subscribeToMore: teamTimeSubscribeToMore } = useQuery(TEAMTIME_QUERY, {
         variables: {
             team: teamName
         }
     })
 
+    const { data: adminData, loading: adminDataLoading, subscribeToMore: adminDataSubscribeToMore } = useQuery(ADMINDATA_QUERY)
+
     useEffect(() => {
         try {
-            subscribeToMore({
+            teamTimeSubscribeToMore({
                 document: TIME_SUBSCRIPTION,
                 variables: { team: teamName },
                 updateQuery: (prev, { subscriptionData }) => {
@@ -37,7 +39,27 @@ const Options = ({ setLogin, teamName }) => {
                 }
             })
         } catch (e) {}
-    }, [subscribeToMore])
+    }, [teamTimeSubscribeToMore])
+
+    useEffect(() => {
+        try {
+            adminDataSubscribeToMore({
+                document: ADMINDATA_SUBSCRIPTION,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if(!subscriptionData) return prev;
+                    const newValue = subscriptionData.data.adminData.isRegisterClosed;
+
+                    console.log(prev);
+
+                    return {
+                        adminData: {
+                            isRegisterClosed: newValue,
+                        },
+                    }
+                }
+            })
+        } catch (e) {}
+    }, [adminDataSubscribeToMore])
 
     //是否是選擇時間登記
     const [register, setRegister] = useState(false);
@@ -82,24 +104,17 @@ const Options = ({ setLogin, teamName }) => {
         </Layout>
     </>
 
-    if(loading) return message.loading("Loading...", 0.5, message.success("Loaded successfully!"))
+    if(teamTimeLoading || adminDataLoading) return message.loading("Loading...", 0.5, message.success("Loaded successfully!"))
 
     return (<>
-        {register?(teamName === "Admin"?<AdminMainPage setRegister={setRegister} teamName={teamName} registerClosed={true}/>:<MainPage setRegister={setRegister} teamName={teamName} data={data}/>):(search?<SearchType setSearch={setSearch} teamName={teamName}/>:OptionPage)}
+        {register?
+            (teamName === "Admin"?
+                <AdminMainPage setRegister={setRegister} teamName={teamName} isRegisterClosed={adminData.adminData.isRegisterClosed}/>
+                    :
+                <MainPage setRegister={setRegister} teamName={teamName} data={teamTImeData} isRegisterClosed={adminData.adminData.isRegisterClosed}/>)
+                :
+            (search?<SearchType setSearch={setSearch} teamName={teamName}/>:OptionPage)}
     </>)
 }
 
 export default Options;
-
-
-
-
-
-
-
-
-
-
-
-
-

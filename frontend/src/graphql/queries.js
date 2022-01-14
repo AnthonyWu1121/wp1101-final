@@ -1,10 +1,12 @@
 import { gql } from "@apollo/client";
 
-// teamName(team: String!): Boolean!
+// teamName: [Team!]
 // allTeam: [Team!]
 // teamTime(team: String!): Team!
+// timeMatch(time: String!): [Team!]
 // teamMatch(team: String!): Match!
 // allMatch: [Match!]
+// adminData: AdminData!
 
 export const TEAMNAME_QUERY = gql`
     query TeamNameQuery {
@@ -57,6 +59,15 @@ export const ALLMATCH_QUERY = gql`
         allMatch {
             matchName
             time
+        }
+    }
+`
+
+export const ADMINDATA_QUERY = gql`
+    query AdminDataQuery {
+        adminData {
+            admin
+            isRegisterClosed
         }
     }
 `
