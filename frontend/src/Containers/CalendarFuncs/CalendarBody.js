@@ -7,13 +7,12 @@ import { useQuery, useMutation } from "@apollo/client";
 
 export default ({teamName, preTime, isRegisterClosed}) => {
     const [selectedDays, setSelectedDays] = useState([])
-    const [selectedDaysInDateForm, setSelectedDaysInDateForm] = useState(preTime)
 
     const [updateTime] = useMutation(UPDATE_TIME_MUTATION)
     useEffect(() => {
-        if(selectedDaysInDateForm.length !== 0){
+        if(preTime.length !== 0){
             let curr = []
-            selectedDaysInDateForm.forEach((k) => {
+            preTime.forEach((k) => {
                 let splitedK = k.split("/");
                 curr.push([parseInt(splitedK[0]),parseInt(splitedK[1])-1,parseInt(splitedK[2])])
             })
@@ -31,7 +30,7 @@ export default ({teamName, preTime, isRegisterClosed}) => {
         for (var i =0; i < n; i++) {
             resultData.push(selectedDays[i]);
         }
-       
+        
         for(let i=0;i<n-1;i++) {
             for(let j=0;j<n-1-i;j++) {
                 if(resultData[j][0] > resultData[j+1][0]) {
@@ -89,12 +88,9 @@ export default ({teamName, preTime, isRegisterClosed}) => {
                 }
                 if(found){
                     setSelectedDays([...selectedDays.slice(0,index), ...selectedDays.slice(index+1)])
-                    setSelectedDaysInDateForm([...selectedDaysInDateForm.slice(0,selectedDaysInDateForm.indexOf(currDate)),
-                                                 ...selectedDaysInDateForm.slice(selectedDaysInDateForm.indexOf(currDate)+1)])
                 }
                 else{
                     setSelectedDays([...selectedDays,curr]);
-                    setSelectedDaysInDateForm([...selectedDaysInDateForm,currDate]);
                 }
                 }}
             disabledDate={(time) => {

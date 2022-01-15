@@ -3,6 +3,7 @@
 // time(team: String!): [String!]
 // allTeamTime: Team!
 // adminData: AdminData!
+// allMatch: [Match!]
 
 const Subscription = {
     createTeam: {
@@ -32,6 +33,12 @@ const Subscription = {
     adminData: {
         subscribe: (parent, args, { pubsub }) => {
             return pubsub.asyncIterator('adminData');
+        },
+    },
+
+    allMatch: {
+        subscribe: (parent, args, { pubsub }) => {
+            return pubsub.asyncIterator('allMatch');
         },
     },
 };

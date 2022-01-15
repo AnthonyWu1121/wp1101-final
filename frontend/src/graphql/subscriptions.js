@@ -3,6 +3,7 @@
 // time(team: String!): [String!]
 // allTeamTime: Team!
 // adminData: AdminData!
+// allMatch: [Match!]
 
 import { gql } from "@apollo/client";
 
@@ -61,6 +62,17 @@ export const ADMINDATA_SUBSCRIPTION = gql`
         adminData {
             admin
             isRegisterClosed
+        }
+    }
+`
+
+export const ALLMATCH_SUBSCRIPTION = gql`
+    subscroption allMatch {
+        allMatch {
+            matchName
+            team_1
+            team_2
+            time
         }
     }
 `

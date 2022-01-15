@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { STATES } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -16,6 +16,8 @@ const TeamDataModel = mongoose.model('teamdata',TeamDataSchema);
 
 const MatchSchema = new Schema({
     matchName: { type: String },
+    team_1: { type: String },
+    team_2: { type: String },
     time: { type: String }
 });
 const MatchModel = mongoose.model('match',MatchSchema);
