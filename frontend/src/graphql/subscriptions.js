@@ -67,7 +67,7 @@ export const ADMINDATA_SUBSCRIPTION = gql`
 `
 
 export const ALLMATCH_SUBSCRIPTION = gql`
-    subscroption allMatch {
+    subscription allMatch {
         allMatch {
             matchName
             team_1

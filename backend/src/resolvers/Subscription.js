@@ -41,6 +41,12 @@ const Subscription = {
             return pubsub.asyncIterator('allMatch');
         },
     },
+
+    teamMatch: {
+        subscribe: (parent, { team }, { pubsub }) => {
+            return pubsub.asyncIterator(`team ${team} match`);
+        },
+    },
 };
 
 export default Subscription;

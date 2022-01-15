@@ -135,6 +135,12 @@ const Mutation = {
                                             pubsub.publish('allMatch', {
                                                 allMatch: matchdata,
                                             });
+                                            pubsub.publish(`team ${teamData.team} match`, {
+                                                teamMatch: matchdata,
+                                            });
+                                            pubsub.publish(`team ${teamData2.team} match`, {
+                                                teamMatch: matchdata,
+                                            });
                                             matchedTime.push(t1);
                                             matchedNameList.push(matchNameNow);
                                             // console.log(matchedTime);

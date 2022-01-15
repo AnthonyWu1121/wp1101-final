@@ -23,6 +23,7 @@ type Subscription {
   allTeamTime: Team!
   adminData: AdminData!
   allMatch: Match!
+  teamMatch(team: String!): Match!
 }
 
 type AdminData {
