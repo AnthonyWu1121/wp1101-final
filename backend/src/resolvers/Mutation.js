@@ -29,29 +29,47 @@ const Mutation = {
     async createTeam(parent, { name }, { db, pubsub }, info){
         if(!name) throw new Error("Missing team name in mutation createTeam");
         const existing = await db.TeamDataModel.findOne({team: name});
-        if(existing) return existing;
-        else if(!existing){
+        if(existing) {
+            return existing;
+        }
+        else if(!existing) {
             const teamdata = new db.TeamDataModel({team: name});
             teamdata.save();
+            pubsub.publish(`createTeam`, {
+                createTeam: teamdata,
+            });
             return teamdata;
         }
     },
 
     async deleteTeam(parent, { name }, { db, pubsub }, info){
         if(!name) throw new Error("Missing team name in mutation deleteTeam");
-        const toDelete = await db.TeamDataModel.deleteOne({team: name});
-        if(toDelete) return true;
-        else return false;
+        const existing = await db.TeamDataModel.findOne({team: name});
+        
+        pubsub.publish(`deleteTeam`, {
+            deleteTeam: existing,
+        });
+        if(existing) {
+            await db.TeamDataModel.deleteOne({team: name});
+            return true;
+        }else return false;
     },
 
     async updateTime(parent, { name, time }, { db, pubsub }, info){
-        console.log(name,time);
+        // console.log(name,time);
         if(!name) throw new Error("Missing team name in mutation updateTime");
         if(!time) throw new Error("Missing team time in mutation updateTime");
         const existing = await db.TeamDataModel.findOneAndUpdate({team: name}, {time: time}, {new: true});
         
         pubsub.publish(`team ${name}`, {
             time: time,
+        });
+
+        pubsub.publish(`allTeamTime`, {
+            allTeamTime: {
+                team: name,
+                time: time,
+            }
         });
         
         return existing;

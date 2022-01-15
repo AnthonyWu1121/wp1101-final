@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { useState } from 'react';
 
 export default ({teamName}) => {
-    const { data, loading } = useQuery(ALLMATCH_QUERY);
+    const { data, loading, subscribeToMore } = useQuery(ALLMATCH_QUERY);
     const [nowPercent, setNowPercent] = useState(0)
     console.log(data);
     const columns = [

@@ -4,7 +4,7 @@ import { TIMEMATCH_QUERY } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
 
 export default ({currentDate}) => {
-    const { data, loading } = useQuery(TIMEMATCH_QUERY, {variables:{time: currentDate}});
+    const { data, loading, subscribeToMore } = useQuery(TIMEMATCH_QUERY, {variables:{time: currentDate}});
     
     if(loading) return message.loading("Loading...", 0.5, message.success("Loaded successfully!"))
 
