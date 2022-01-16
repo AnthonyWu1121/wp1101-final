@@ -47,6 +47,12 @@ const Subscription = {
             return pubsub.asyncIterator(`team ${team} match`);
         },
     },
+
+    // deleteMatch: {
+    //     subscribe: (parent, args, { pubsub }) => {
+    //         return pubsub.asyncIterator('deleteMatch');
+    //     },
+    // },
 };
 
 export default Subscription;

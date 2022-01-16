@@ -45,11 +45,25 @@ const Mutation = {
     async deleteTeam(parent, { name }, { db, pubsub }, info){
         if(!name) throw new Error("Missing team name in mutation deleteTeam");
         const existing = await db.TeamDataModel.findOne({team: name});
-        
-        pubsub.publish(`deleteTeam`, {
-            deleteTeam: existing,
-        });
+
         if(existing) {
+            pubsub.publish(`deleteTeam`, {
+                deleteTeam: existing,
+            });
+
+            const matcFound = await db.MatchModel.find({$or: [{team_1: name}, {team_2: name}]});
+            const n = matcFound.length;
+            for(let i = 0; i < n; i++){
+                const matchToDelete = matcFound[i];
+                await db.MatchModel.deleteOne(matchToDelete);
+                pubsub.publish('allMatch', {
+                    allMatch: {
+                        mutation: "DELETED",
+                        match: matchToDelete,
+                    },
+                });
+            }
+
             await db.TeamDataModel.deleteOne({team: name});
             return true;
         }else return false;
@@ -133,7 +147,10 @@ const Mutation = {
                                             // console.log(matchdata);
                                             matchdata.save();
                                             pubsub.publish('allMatch', {
-                                                allMatch: matchdata,
+                                                allMatch: {
+                                                    mutation: "CREATED",
+                                                    match: matchdata,
+                                                }
                                             });
                                             pubsub.publish(`team ${teamData.team} match`, {
                                                 teamMatch: matchdata,
